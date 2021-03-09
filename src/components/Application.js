@@ -21,6 +21,7 @@ import { faVideo, faUser } from '@fortawesome/free-solid-svg-icons'
 
 import Video from './Video';
 import Settings from './Settings';
+import Profile from './Profile'
 
 import Loading from './Loading'
 import SignUp from '../pages/SignUp'
@@ -77,6 +78,9 @@ export default class Application extends Component {
     const SettingsStack = createStackNavigator({
       Settings: {
         screen: Settings
+      },
+      Profile: {
+        screen: Profile
       }
     },{headerLayoutPreset: 'center'})
     SettingsStack.navigationOptions = ({ navigation }) => {
