@@ -17,7 +17,6 @@ import KeyboardShift from '../components/KeyboardShift';
 
 import InputText from '../components/InputText';
 import firebase from '@react-native-firebase/app';
-// import { db } from '../../Firebase';
 import { database as db} from '@react-native-firebase/database';
 
 const styles = StyleSheet.create({

@@ -64,8 +64,8 @@ export default class IntroSlider extends Component {
                 <View style={{ flex: 1, alignItems: "center",
                 justifyContent: 'flex-end',
                 marginBottom: 50}}>
-                  <Text style={styles.header}>Welcome to the Toad's Place mobile app!</Text>
-                  <Text style={styles.subHeader}>Let's hop right in</Text>
+                  <Text style={styles.header}>Welcome to Love at First Sight!</Text>
+                  <Text style={styles.subHeader}>Let us get right to it.</Text>
                   <Image
                   style={{
                     maxWidth: Dimensions.get('window').width*.75 ,

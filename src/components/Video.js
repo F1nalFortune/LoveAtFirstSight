@@ -6,7 +6,6 @@ import {
   ScrollView,
   TouchableOpacity
 } from 'react-native';
-// import firebase from '@react-native-firebase/app';
 
 
 export default class Video extends Component {

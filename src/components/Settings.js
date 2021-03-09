@@ -2,99 +2,306 @@ import React, { Component } from 'react';
 import {
   Text,
   View,
+  Button,
   StyleSheet,
+  TouchableOpacity,
+  Switch,
   ScrollView,
-  TouchableOpacity
+  Linking
 } from 'react-native';
-// import firebase from '@react-native-firebase/app';
+// import Icon from 'react-native-vector-icons/FontAwesome5';
 
 
+import firebase from '@react-native-firebase/app';
+import { database as db} from '@react-native-firebase/database';
+
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { faChevronRight } from '@fortawesome/free-solid-svg-icons'
+
+
+// TODO
+// add terms of service for android users
 export default class Settings extends Component {
+  state = {
+    currentUser: null,
+  }
+  componentDidMount() {
+    const { currentUser } = firebase.auth()
+    this.setState({ currentUser })
 
+    //Pull Genre Prefs from Database
+    var user_id = firebase.auth().currentUser.uid
+  }
 
+  signOutUser = async () => {
+    try {
+        await firebase.auth().signOut();
+    } catch (e) {
+        console.log(e);
+    }
+  }
   render() {
     // firebase.analytics().setCurrentScreen('settings');
+    const ColoredLine = ({ color, width, pad }) => (
+      <View
+        style={{
+          borderBottomColor: color,
+          borderBottomWidth: 1,
+          width: width,
+          paddingTop: pad,
+          marginBottom: pad
+        }}
+      />
+    );
+    const { currentUser } = this.state
+
     return (
-    <ScrollView style={{backgroundColor: '#c0dfc066'}}>
-      <Text style={styles.title}>
-        Settings
-      </Text>
-      <View style={styles.infoContainer}>
-        <Text style={styles.subtitle}>
-          There are several pay lots in the area, visit ParkNewHaven for
-          more information.
-        </Text>
+    <ScrollView>
+      <View style={styles.container}>
+        <ColoredLine color="grey" width="100%" pad={5}/>
         <TouchableOpacity
-          style={styles.button}
-          onPress={() => Linking.openURL("https://www.ParkNewHaven.com")}>
-          <Text style={styles.buttonTxt}>Park{"\n"}NewHaven</Text>
+          style={styles.menuTabs}
+          onPress={() => this.props.navigation.navigate('Inbox')}>
+          <View style={styles.menuTabText}>
+            <Text>
+              Inbox
+            </Text>
+          </View>
+          <View style={styles.menuTabIcon}>
+            <FontAwesomeIcon
+            icon={ faChevronRight }
+            size={20}
+            style={styles.menuTabIcon}/>
+          </View>
         </TouchableOpacity>
-        <Text style={styles.subtitle}>
-          There is also metered parking throughout the city.  All meters in New
-          Haven accept coins as payment, as well as the ParkMobile app.  Many
-          of the meters throughout the downtown area accept Visa, Mastercard or
-          Discover cards.
-          {"\n"}
-          The meters are in effect until 9pm Monday-Saturday
-          (excluding holidays).  After 5pm, there are no time limits associated
-          with any meter.  Please check each meter for time and rate.
-        </Text>
+        <ColoredLine color="grey" width="100%" pad={5}/>
+        <TouchableOpacity
+          style={styles.menuTabs}
+          onPress={() => this.props.navigation.navigate('Profile')}>
+          <View style={styles.menuTabText}>
+            <Text>
+              Profile
+            </Text>
+          </View>
+          <View style={styles.menuTabIcon}>
+            <FontAwesomeIcon
+            icon={ faChevronRight }
+            size={20}
+            style={styles.menuTabIcon}/>
+          </View>
+        </TouchableOpacity>
+        <ColoredLine color="grey" width="100%" pad={5}/>
+
+        <TouchableOpacity
+          style={styles.menuTabs}
+          onPress={() => this.props.navigation.navigate('Promotions')}>
+          <View style={styles.menuTabText}>
+            <Text>
+              Promotions
+            </Text>
+          </View>
+          <View style={styles.menuTabIcon}>
+            <FontAwesomeIcon
+            icon={ faChevronRight }
+            size={20}
+            style={styles.menuTabIcon}/>
+          </View>
+        </TouchableOpacity>
+        <ColoredLine color="grey" width="100%" pad={5}/>
+
+        <TouchableOpacity
+          style={[styles.menuTabs, {
+            flexDirection: 'row',
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center'
+          }]}>
+          <View style={styles.menuTabText}>
+            <Text>
+              Use My Current Location
+            </Text>
+          </View>
+          <View style={styles.menuTabIcon}>
+            <Switch
+              onValueChange= {this.toggle_promotions}
+              value = {this.state.promotions}
+              trackColor = {{true: '#008000b3'}}/>
+          </View>
+        </TouchableOpacity>
+
+        <ColoredLine color="grey" width="100%" pad={5}/>
+
+        <TouchableOpacity
+          style={styles.menuTabs}
+          onPress={() => {
+            var url = "http://www.toadsplace.com/wp/venue_info"
+            this.props.navigation.navigate('SettingsBrowser', {url})
+          }}
+        >
+          <View style={styles.menuTabText}>
+            <Text>
+              Help
+            </Text>
+          </View>
+          <View style={styles.menuTabIcon}>
+            <FontAwesomeIcon
+            icon={ faChevronRight }
+            size={20}
+            style={styles.menuTabIcon}/>
+          </View>
+        </TouchableOpacity>
+
+        <ColoredLine color="grey" width="100%" pad={5}/>
+
+
+        <TouchableOpacity
+          style={styles.menuTabs}
+          onPress={() => {
+            var url = "https://toadsdanceparty.com/contact"
+            this.props.navigation.navigate('SettingsBrowser', {url})
+          }}
+        >
+          <View style={styles.menuTabText}>
+            <Text>
+              Contact Us
+            </Text>
+          </View>
+          <View style={styles.menuTabIcon}>
+            <FontAwesomeIcon
+            icon={ faChevronRight }
+            size={20}
+            style={styles.menuTabIcon}/>
+          </View>
+        </TouchableOpacity>
+
+        <ColoredLine color="grey" width="100%" pad={5}/>
+
+        <TouchableOpacity
+          style={styles.menuTabs}
+          onPress={() => {
+            var url = "https://toadsdanceparty.com/privacypolicy"
+            this.props.navigation.navigate('SettingsBrowser', {url})
+          }}
+        >
+          <View style={styles.menuTabText}>
+            <Text>
+              Privacy
+            </Text>
+          </View>
+          <View style={styles.menuTabIcon}>
+            <FontAwesomeIcon
+            icon={ faChevronRight }
+            size={20}
+            style={styles.menuTabIcon}/>
+          </View>
+        </TouchableOpacity>
+
+        <ColoredLine color="grey" width="100%" pad={5}/>
+
+        <TouchableOpacity
+          style={styles.menuTabs}
+          onPress={() => {
+            var url ="https://toadsdanceparty.com/terms"
+            this.props.navigation.navigate('SettingsBrowser', {url})}
+          }
+        >
+          <View style={styles.menuTabText}>
+            <Text>
+              Terms of Service
+            </Text>
+          </View>
+          <View style={styles.menuTabIcon}>
+            <FontAwesomeIcon
+            icon={ faChevronRight }
+            size={20}
+            style={styles.menuTabIcon}/>
+          </View>
+        </TouchableOpacity>
+
+        <ColoredLine color="grey" width="100%" pad={5}/>
+
+        <TouchableOpacity
+          style={styles.menuTabs}>
+          <View style={styles.menuTabText}>
+            <Text>
+              Version
+            </Text>
+          </View>
+          <View style={styles.menuTabIcon}>
+            <Text numberOfLines={1}>
+            1.3.0
+            </Text>
+          </View>
+        </TouchableOpacity>
+
+        <ColoredLine color="grey" width="100%" pad={5}/>
+        <View style={styles.bottomFooter}>
+          <View>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {
+                this.signOutUser()
+              }}
+            >
+              <Text>Signout</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
     </ScrollView>
     );
   }
 }
 
-
 const styles = StyleSheet.create({
   button:{
-    width: '50%', // is 50% of container width
-    borderColor: '#0079c1',
-    borderRadius: 5,
-    borderWidth: 2,
+    borderColor: 'green',
+    borderRadius: 10,
+    borderWidth: 1,
     borderStyle: 'solid',
+    padding: 10,
+    textTransform: 'uppercase',
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 10
+  },
+  bottomFooter:{
+    marginTop: 25
+  },
+  container:{
     flex: 1,
-    backgroundColor: '#0079c1c4',
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    justifyContent: 'center',
-    alignItems: 'center',
-    textAlign: 'center',
-    margin:25
+    padding: 10
   },
-  buttonTxt:{
-    justifyContent: 'center',
-    alignItems: 'center',
-    textAlign: 'center',
-    color: 'white',
-    fontWeight: 'bold',
-    textTransform: 'uppercase',
-    padding:5
+  currentUser:{
+    textAlign: 'right'
   },
-  infoContainer:{
-    padding:15
-  },
-  title:{
-    textAlign: 'center',
-    textTransform: 'uppercase',
-    fontSize: 24,
-    paddingTop: 20,
-    paddingBottom: 0
-  },
-  serviceInfo:{
-    paddingLeft: 25,
-    paddingRight: 25,
-    lineHeight: 20,
-    fontSize: 16
-  },
-  serviceTitle:{
-    textAlign: 'center',
-    textTransform: 'uppercase',
+  genre: {
     fontSize: 18,
+    padding: 5
   },
-  subtitle:{
-    fontSize: 16,
-    textAlign: 'justify',
-    lineHeight: 20
+  switchContainer:{
+    flexDirection: 'row',
+    alignItems: 'flex-end'
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginTop: 15
+  },
+  menuTabs:{
+    flexDirection: 'row',
+    padding: 20
+  },
+  menuTabText:{
+    flexDirection: 'row',
+    width: '80%',
+    fontSize: 18
+  },
+  menuTabIcon:{
+    flex: 1,
+    zIndex: 100000,
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
+    width: '20%'
   }
 })
