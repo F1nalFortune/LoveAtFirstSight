@@ -29,19 +29,26 @@ import Login from '../pages/Login'
 import ForgotPassword from '../pages/ForgotPassword'
 import IntroSlider from '../pages/IntroSlider'
 
-import firebase from '@react-native-firebase/app';
-
+import {
+    API_KEY,
+    AUTH_DOMAIN,
+    DATABASE_URL,
+    PROJECT_ID,
+    STORAGE_BUCKET,
+    MESSAGE_SENDER_ID,
+    APP_ID
+} from 'react-native-dotenv'
 const config = {
-  apiKey: "AIzaSyBX8K5f5QqClhWXXff8-STbyXNivBrkViw",
-  authDomain: "loveatfirstsight.firebaseapp.com",
-  databaseURL: "https://loveatfirstsight-default-rtdb.firebaseio.com/",
-  projectId: "loveatfirstsight",
-  storageBucket: "loveatfirstsight.appspot.com",
-  messagingSenderId: "499035082014",
-  appId: "1:499035082014:web:a4c0acf48172d6cc504d0f",
-  measurementId: "G-JQMTEX13B7",
+  apiKey: API_KEY,
+  authDomain: AUTH_DOMAIN,
+  databaseURL: DATABASE_URL,
+  projectId: PROJECT_ID,
+  storageBucket: STORAGE_BUCKET,
+  messagingSenderId: MESSAGE_SENDER_ID,
+  appId: APP_ID,
   persistence: true
 };
+import firebase from '@react-native-firebase/app';
 firebase.initializeApp(config);
 
 export default class Application extends Component {
