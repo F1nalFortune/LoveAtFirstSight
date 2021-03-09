@@ -37,7 +37,8 @@ import {
     STORAGE_BUCKET,
     MESSAGE_SENDER_ID,
     APP_ID
-} from 'react-native-dotenv'
+} from "@env"
+
 const config = {
   apiKey: API_KEY,
   authDomain: AUTH_DOMAIN,
