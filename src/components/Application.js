@@ -1,41 +1,47 @@
 import React, {Fragment, Component} from 'react';
-import { View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
+import {
+  Button,
+  View,
+  Text,
+  StyleSheet,
+  PermissionsAndroid,
+  Platform,
+  ScrollView,
+  TouchableOpacity,
+  Linking,
+  Dimensions,
+  Alert,
+  SafeAreaView,
+  NativeModules
+} from 'react-native';
+import { createStackNavigator, createBottomTabNavigator, createAppContainer, createSwitchNavigator } from 'react-navigation';
 
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faVideo, faUser } from '@fortawesome/free-solid-svg-icons'
 
-const Tab = createBottomTabNavigator();
-const VideoStack = createStackNavigator();
-const SettingsStack = createStackNavigator();
-
 import Video from './Video';
+import Settings from './Settings';
 
-function A() {
-  return <View />;
-}
+import Loading from './Loading'
+import SignUp from '../pages/SignUp'
+import Login from '../pages/Login'
+import ForgotPassword from '../pages/ForgotPassword'
+import IntroSlider from '../pages/IntroSlider'
 
-function B() {
-  return <View />;
-}
+import firebase from '@react-native-firebase/app';
 
-function VideoStackScreen() {
-  return (
-    <VideoStack.Navigator>
-      <VideoStack.Screen name="Video" component={Video} />
-    </VideoStack.Navigator>
-  );
-}
-
-function SettingsStackScreen() {
-  return (
-    <SettingsStack.Navigator>
-      <SettingsStack.Screen name="B" component={B} />
-    </SettingsStack.Navigator>
-  );
-}
+const config = {
+  apiKey: "AIzaSyBX8K5f5QqClhWXXff8-STbyXNivBrkViw",
+  authDomain: "loveatfirstsight.firebaseapp.com",
+  databaseURL: "https://loveatfirstsight-default-rtdb.firebaseio.com/",
+  projectId: "loveatfirstsight",
+  storageBucket: "loveatfirstsight.appspot.com",
+  messagingSenderId: "499035082014",
+  appId: "1:499035082014:web:a4c0acf48172d6cc504d0f",
+  measurementId: "G-JQMTEX13B7",
+  persistence: true
+};
+firebase.initializeApp(config);
 
 export default class Application extends Component {
   constructor(){
@@ -44,46 +50,215 @@ export default class Application extends Component {
       cal_auth: ''
     }
   }
-
+  navOptions = (title) => {
+    return {
+      title: title,
+      headerStyle: {
+        backgroundColor: "#000000cc",
+        opacity: .8,
+        borderBottomColor: 'green',
+        borderBottomWidth: 1
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        color: "#fff",
+        textShadowColor: "#66ff66",
+        textShadowOffset: {width: -1, height: 1},
+        textShadowRadius: 10,
+        shadowOpacity: .58,
+        textAlign: 'center',
+        textTransform: 'uppercase',
+        fontSize: 24,
+        padding: 10
+      }
+    }
+  }
   render() {
-  return (
-    <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
-
-            if (route.name === 'Video') {
-              iconName = faVideo;
-            } else if (route.name === 'Settings') {
-              iconName = faUser;
-            }
-            // You can return any component that you like here!
-            return <FontAwesomeIcon icon={ iconName } size={25}/>;
-          },
-        })}
-        tabBarOptions={{
-          activeTintColor: 'white',
-          inactiveTintColor: 'white',
-          inactiveBackgroundColor: 'black',
-          activeBackgroundColor: '#272727',
-          style:{
-            height: 65,
-            zIndex: 1000
+    const SettingsStack = createStackNavigator({
+      Settings: {
+        screen: Settings
+      }
+    },{headerLayoutPreset: 'center'})
+    SettingsStack.navigationOptions = ({ navigation }) => {
+      let tabBarVisible;
+      if (navigation.state.routes.length > 1) {
+        navigation.state.routes.map(route => {
+          if (route.routeName != "Settings") {
+            tabBarVisible = false;
+          } else {
+            tabBarVisible = true;
           }
-        }}>
-        <Tab.Screen
-          name="Video"
-          component={VideoStackScreen}
-          options={{ tabBarLabel: 'Video' }}
-        />
-        <Tab.Screen
-          name="Settings"
-          component={SettingsStackScreen}
-          options={{ tabBarLabel: 'Settings' }}
-        />
-      </Tab.Navigator>
-    </NavigationContainer>
-  );
+        });
+      }
+      return {
+        tabBarVisible
+      };
+    };
+    const VideoStack = createStackNavigator({
+      Video: {
+        screen: Video
+      },
+    },{headerLayoutPreset: 'center'});
+
+
+    const MainTabs = createBottomTabNavigator({
+        Video: { screen: VideoStack },
+        Settings: { screen: SettingsStack }
+    },
+    {
+      defaultNavigationOptions: ({ navigation }) => ({
+        tabBarIcon: ({ focused, tintColor }) => {
+          const { routeName } = navigation.state;
+          let iconName;
+          if (routeName === 'Video') {
+            iconName = faVideo;
+          } else if (routeName === 'Settings'){
+            iconName = faUser;
+          }
+          return <FontAwesomeIcon icon={ iconName } size={25}/>;
+        },
+      }),
+      tabBarOptions: {
+        activeTintColor: 'white',
+        inactiveTintColor: 'white',
+        inactiveBackgroundColor: 'black',
+        activeBackgroundColor: '#272727',
+        style:{
+          height: 65,
+          zIndex: 1000
+        }
+      }
+    });
+
+
+    const Application = createAppContainer(createSwitchNavigator({
+      Loading: {
+        screen: Loading
+      },
+      Welcome: {
+        screen: IntroSlider
+      },
+      SignUp: {
+        screen: SignUp
+      },
+      Login: {
+        screen: Login
+      },
+      Forgot: {
+        screen: ForgotPassword
+      },
+      App: {
+        screen: MainTabs
+      }
+    },
+    {
+      initialRouteName: 'Loading'
+    }
+  ));
+    return <Application />;
   }
 }
+
+
+
+const styles = StyleSheet.create ({
+  act:{
+    width: '50%'
+  },
+  bold:{
+    fontWeight: 'bold'
+  },
+  button:{
+    borderColor: 'green',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderStyle: 'solid',
+    padding: 10,
+    textTransform: 'uppercase',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 10
+  },
+  center:{
+    textAlign: 'center'
+  },
+  date:{
+    fontSize: 24,
+    textTransform: 'uppercase'
+  },
+  dateWrapper:{
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  footer:{
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 5,
+    paddingBottom: 5
+  },
+  glow:{
+    color: "#fff",
+    textShadowColor: "#66ff66",
+    textShadowOffset: {width: -1, height: 1},
+    textShadowRadius: 10,
+    padding: 10
+  },
+  infoLink:{
+    textAlign: 'center',
+    paddingTop: 10
+  },
+  info:{
+    width: '50%'
+  },
+  icon:{
+
+  },
+  imgWrapper:{
+    width: '100%'
+  },
+  image: {
+      flex: 1,
+      alignSelf: 'stretch'
+  },
+  link:{
+    color: 'blue',
+    zIndex: 100
+  },
+  starDetail:{
+    textAlign: 'center',
+    paddingTop: 10,
+    position: 'relative'
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    width: '100%',
+    color: "#fff",
+    textShadowColor: "#66ff66",
+    textShadowOffset: {width: -1, height: 1},
+    textShadowRadius: 10,
+    textAlign: 'center',
+    textTransform: 'uppercase',
+    padding:10
+  },
+  titleWrapper:{
+    backgroundColor: 'black',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row'
+  },
+  wrapper: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    flexWrap: 'wrap',
+    // width: 100,
+    paddingTop: 10,
+    paddingLeft: 10,
+    paddingRight: 10
+  }
+})

@@ -124,12 +124,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header:{
-    fontFamily: "Merriweather-Regular",
     fontSize: 28,
     textAlign: 'center'
   },
   subHeader:{
-    fontFamily: "Merriweather-Light",
     fontSize: 18,
     textAlign: 'center',
     color: 'grey',

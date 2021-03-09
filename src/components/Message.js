@@ -13,7 +13,7 @@ export default class Message extends Component {
 
 
   render() {
-    firebase.analytics().setCurrentScreen('settings');
+    // firebase.analytics().setCurrentScreen('settings');
     return (
     <ScrollView style={{backgroundColor: '#c0dfc066'}}>
       <Text style={styles.title}>
@@ -66,7 +66,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     textAlign: 'center',
-    fontFamily: "Merriweather-Bold",
     color: 'white',
     fontWeight: 'bold',
     textTransform: 'uppercase',
@@ -77,7 +76,6 @@ const styles = StyleSheet.create({
   },
   title:{
     textAlign: 'center',
-    fontFamily: "Merriweather-Bold",
     textTransform: 'uppercase',
     fontSize: 24,
     paddingTop: 20,
@@ -91,7 +89,6 @@ const styles = StyleSheet.create({
   },
   serviceTitle:{
     textAlign: 'center',
-    fontFamily: "Merriweather-Regular",
     textTransform: 'uppercase',
     fontSize: 18,
   },

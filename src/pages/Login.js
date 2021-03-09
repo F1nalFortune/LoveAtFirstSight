@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Alert
   } from 'react-native';
+
 import firebase from '@react-native-firebase/app';
 
 import Logo from '../components/Logo'
@@ -34,7 +35,7 @@ export default class Login extends Component {
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
-      .then(() => this.props.navigation.navigate('Calendar'))
+      .then(() => this.props.navigation.navigate('Video'))
       .catch(error => {
         console.log(error)
         console.log(JSON.stringify(error, null, 2))

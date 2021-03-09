@@ -17,6 +17,8 @@ import KeyboardShift from '../components/KeyboardShift';
 
 import InputText from '../components/InputText';
 import firebase from '@react-native-firebase/app';
+import auth from '@react-native-firebase/auth';
+
 // import { db } from '../../Firebase';
 import { database as db} from '@react-native-firebase/database';
 
@@ -88,7 +90,7 @@ export default class ForgotPassword extends Component {
 
   resetPassword = (props) => {
     const {email} = this.state
-    firebase.auth().sendPasswordResetEmail(email)
+    auth().sendPasswordResetEmail(email)
        .then(function (user) {
          Alert.alert(
          "Success",
@@ -108,7 +110,7 @@ export default class ForgotPassword extends Component {
 
 
   render() {
-    firebase.analytics().setCurrentScreen('forgotPw');
+    // firebase.analytics().setCurrentScreen('forgotPw');
     return (
       <KeyboardShift>
         {() => (

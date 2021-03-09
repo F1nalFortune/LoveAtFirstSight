@@ -10,8 +10,6 @@ import {
 
 
 export default class Video extends Component {
-
-
   render() {
     // firebase.analytics().setCurrentScreen('video');
     return (

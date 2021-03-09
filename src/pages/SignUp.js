@@ -88,13 +88,11 @@ export default class SignUp extends Component {
 
   createNewUser = () => {
     const {email, password} = this.state;
-    console.log("Email: ", email)
-    console.log("Password; ", password)
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
       .then((user) => {
-        this.props.navigation.navigate('Calendar', {user})
+        this.props.navigation.navigate('Video', {user})
       })
       .catch(error => {
         console.log(typeof error)
@@ -126,7 +124,7 @@ export default class SignUp extends Component {
 
 
   render() {
-    firebase.analytics().setCurrentScreen('signup');
+    // firebase.analytics().setCurrentScreen('signup');
     const { handleSubmit } = this.props
     return (
       <KeyboardShift>
